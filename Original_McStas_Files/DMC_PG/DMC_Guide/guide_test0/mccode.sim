@@ -1,0 +1,154 @@
+McStas simulation description file for template_body_simple.
+Date:    Fri Feb 18 11:18:35 2022
+Program: McStas 3.1 - Nov. 24, 2021
+
+begin instrument: template_body_simple
+  File: guide_test0/mccode
+  Source: DMC_guide.instr
+  Parameters:  div(double) Ei(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: guide_test0
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 3.1 - Nov. 24, 2021
+  Instrument: DMC_guide.instr
+  Ncount: 1000000
+  Trace: no
+  Gravitation: no
+  Seed: 1645179515922643
+  Directory: guide_test0
+  Param: div=20
+  Param: Ei=3
+end simulation
+
+begin data
+  Date: Fri Feb 18 11:18:36 2022 (1645179516)
+  type: array_2d(120, 120)
+  Source: template_body_simple (DMC_guide.instr)
+  component: psd_monitor
+  position: 0 0 41.201
+  title: PSD monitor
+  Ncount: 2000000
+  filename: psd_guide.dat
+  statistics: X0=0.000363517; dX=0.57613; Y0=0.0021735; dY=3.45984;
+  signal: Min=0; Max=257030; Mean=19987.4;
+  values: 2.87818e+08 837602 438331
+  xvar: X 
+  yvar: Y 
+  xlabel: X position [cm]
+  ylabel: Y position [cm]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -7.5 7.5 -7.5 7.5
+  variables: I I_err N
+end data
+
+begin data
+  Date: Fri Feb 18 11:18:36 2022 (1645179516)
+  type: array_2d(120, 120)
+  Source: template_body_simple (DMC_guide.instr)
+  component: divergence_monitor
+  position: 0 0 41.202
+  title: Divergence monitor
+  Ncount: 2000000
+  filename: divergence_guide.dat
+  statistics: X0=-0.00143186; dX=0.372598; Y0=-0.000472557; dY=0.509342;
+  signal: Min=3.4361e-78; Max=106664; Mean=19987.4;
+  values: 2.87818e+08 837602 236939
+  xvar: X 
+  yvar: Y 
+  xlabel: X divergence [deg]
+  ylabel: Y divergence [deg]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -1.2 1.2 -1.2 1.2
+  variables: I I_err N
+end data
+
+begin data
+  Date: Fri Feb 18 11:18:36 2022 (1645179516)
+  type: array_1d(20)
+  Source: template_body_simple (DMC_guide.instr)
+  component: e_monitor
+  position: 0 0 41.203
+  title: Energy monitor
+  Ncount: 2000000
+  filename: E_guide.dat
+  statistics: X0=3.75; dX=0;
+  signal: Min=0; Max=2.87818e+08; Mean=1.43909e+07;
+  values: 2.87818e+08 837602 438331
+  xvar: E
+  yvar: (I,I_err)
+  xlabel: Energy [meV]
+  ylabel: Intensity
+  xlimits: 0 50
+  variables: E I I_err N
+end data
+
+begin data
+  Date: Fri Feb 18 11:18:36 2022 (1645179516)
+  type: array_2d(90, 90)
+  Source: template_body_simple (DMC_guide.instr)
+  component: psd_monitor_col
+  position: 2.24613 0 41.2145
+  title: PSD monitor
+  Ncount: 2000000
+  filename: psd_col.dat
+  statistics: X0=-0.00264703; dX=0.869178; Y0=0.0773897; dY=3.32089;
+  signal: Min=0; Max=36634.4; Mean=640.668;
+  values: 5.18941e+06 95863.5 7322
+  xvar: X 
+  yvar: Y 
+  xlabel: X position [cm]
+  ylabel: Y position [cm]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -15 15 -15 15
+  variables: I I_err N
+end data
+
+begin data
+  Date: Fri Feb 18 11:18:36 2022 (1645179516)
+  type: array_1d(50)
+  Source: template_body_simple (DMC_guide.instr)
+  component: e_monitor_final
+  position: 2.24623 0 41.2145
+  title: Energy monitor
+  Ncount: 2000000
+  filename: energy_mon.dat
+  statistics: X0=2.99975; dX=0.0999997;
+  signal: Min=0; Max=2.60121e+06; Mean=103788;
+  values: 5.18941e+06 95863.5 7322
+  xvar: E
+  yvar: (I,I_err)
+  xlabel: Energy [meV]
+  ylabel: Intensity
+  xlimits: 0 10
+  variables: E I I_err N
+end data
+
+begin data
+  Date: Fri Feb 18 11:18:36 2022 (1645179516)
+  type: array_2d(11, 7321)
+  Source: template_body_simple (DMC_guide.instr)
+  component: virtual_output
+  position: 2.24711 0 41.2143
+  title:  Intensity Position Position Position Velocity Velocity Velocity Time_Of_Flight Spin Spin Spin Monitor (Square)
+  Ncount: 2000000
+  filename: Virtuel_neutron_9meV_list.p.x.y.z.vx.vy.vz.t.sx.sy.sz
+  statistics: X0=0; dX=0; Y0=0; dY=0;
+  signal: Min=5.31105e-16; Max=5.31105e-16; Mean=0;
+  values: 0 0 0
+  xvar: Li
+  yvar: p 
+  xlabel: List of neutron events
+  ylabel: p x y z vx vy vz t sx sy sz 
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: 1 7321 1 11
+  variables: p x y z vx vy vz t sx sy sz 
+end data

@@ -1,0 +1,151 @@
+/*******************************************************************************
+* Instrument: <instrument name>
+*
+* %I
+* Written by: <Kristine M. L. Krighaar (kristinekrighaar@hotmail.com)>
+* Date: <current date>
+* Origin: <your institution>
+* %INSTRUMENT_SITE: Templates
+*
+* <instrument short description>
+*
+* %D
+* <instrument description>
+*
+* Example: <parameters=values>
+*
+* %P
+* <parameter1>: [<unit>] <parameter1 description>
+* ...
+*
+* %L
+* <reference/HTML link>
+*
+* %E
+*******************************************************************************/
+DEFINE INSTRUMENT template_body_simple(div= 20, Ei=3)
+
+DECLARE
+%{
+double theta_m;
+double lambda_i;
+double dm=3.355;
+%}
+
+INITIALIZE
+%{
+lambda_i = (2.0*PI)/(sqrt(Ei)*0.694692);
+theta_m = asin((lambda_i)/(2.0*dm))*180.0/PI;
+%}
+
+TRACE
+COMPONENT origin = Progress_bar()
+AT (0, 0, 0) RELATIVE ABSOLUTE
+
+// insert components here (e.g. Insert -> Source -> ...)
+
+COMPONENT source_maxwell_3 = Source_Maxwell_3(
+    yheight=0.16, 
+    xwidth=0.085, 
+    Lmin=lambda_i*0.97, 
+    Lmax=lambda_i*1.03, 
+    dist=1.5, 
+    focus_xw=0.02, 
+    focus_yh=0.12, 
+    T1=150.42, 
+    T2=38.74, 
+    T3=14.84, 
+    I1=3.67E11, 
+    I2=3.64E11, 
+    I3=0.95E11)
+AT (0, 0, 0) RELATIVE PREVIOUS
+
+COMPONENT guide = Guide( 
+    w1=0.02, 
+    h1=0.12, 
+    w2=0.02, 
+    h2=0.12, 
+    l=40)
+AT (0, 0, 1.2) RELATIVE PREVIOUS
+
+
+COMPONENT psd_monitor = PSD_monitor(
+    nx=120, 
+    ny=120, 
+    filename="psd_guide", 
+    xwidth=0.15, 
+    yheight=0.15, 
+    restore_neutron=1)
+AT (0, 0, 40+0.001) RELATIVE PREVIOUS
+
+COMPONENT divergence_monitor = Divergence_monitor(
+    nh=120, 
+    nv=120, 
+    filename="divergence_guide", 
+    xwidth=0.15, 
+    yheight=0.15,
+    maxdiv_h=1.2, 
+    maxdiv_v=1.2, 
+    restore_neutron=1)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT e_monitor = E_monitor(
+    filename="E_guide", 
+    xwidth=1.5, 
+    yheight=1.5, 
+    Emin=0, 
+    Emax=50, 
+    restore_neutron=1)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+
+COMPONENT arm = Arm()
+AT (0, 0, 41.7) RELATIVE origin
+
+
+COMPONENT monochromator_flat = Monochromator_flat(
+    zwidth=0.12, 
+    yheight=0.2, 
+    r0=0.8, 
+    DM=3.355)
+AT (0, 0, 0) RELATIVE PREVIOUS
+ROTATED (0, theta_m, 0) RELATIVE PREVIOUS
+
+COMPONENT a2 = Arm()
+AT (0, 0, 0) RELATIVE PREVIOUS
+ROTATED (0, theta_m, 0) RELATIVE PREVIOUS
+
+COMPONENT collimator_linear = Collimator_linear(
+    divergence=div)
+AT (0, 0, 0.5) RELATIVE PREVIOUS
+
+COMPONENT psd_monitor_col = PSD_monitor(
+    filename="psd_col", 
+    xwidth=0.3, 
+    yheight=0.3, 
+    restore_neutron=1)
+AT (0, 0, 1.798) RELATIVE PREVIOUS
+
+COMPONENT e_monitor_final = E_monitor(
+    nE=50, 
+    filename="energy_mon", 
+    xwidth=0.3, 
+    yheight=0.3, 
+    Emin=0, 
+    Emax=10, 
+    restore_neutron=1)
+AT (0, 0, 0.0001) RELATIVE psd_monitor_col
+
+COMPONENT mcpl_output = MCPL_output(
+    filename="Virtual_neutron_3meV")
+AT (0, 0, 0.001) RELATIVE psd_monitor_col
+
+/*COMPONENT virtual_output = Virtual_output(
+    filename="Virtuel_neutron_9meV")
+AT (0, 0, 0.001) RELATIVE psd_monitor_col*/
+
+FINALLY
+%{
+%}
+
+END
