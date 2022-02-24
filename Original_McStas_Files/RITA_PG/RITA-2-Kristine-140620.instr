@@ -1,0 +1,419 @@
+/*******************************************************************************
+* Instrument: <RITA-II modification for Neutron scattering course 2020>
+*
+* %I
+* Written by: <Kristine M. L. Krighaar & Kim Lefmann>
+* Date: <8-6-2020>
+* Origin: <Niels Bohr Institute>
+* %INSTRUMENT_SITE: Templates
+*
+* <instrument short description>
+*
+* %D
+* <instrument description>
+*
+* Example: <parameters=values>
+*
+* %P
+* <parameter1>: [<unit>] <parameter1 description>
+* ...
+*
+* %L
+* <reference/HTML link>
+*
+* %E
+*******************************************************************************/
+DEFINE INSTRUMENT template_body_simple(Ei=5.0, Ef=5.0, mono_focus=1, h=0, l=2, col_div_1=80, col_div_2=80, slit_left = 0.01, slit_right = 0.01, slit_top = 0.01, slit_bottom = 0.01, l_cryostat = 0.15, detector_x=0.03, detector_y=0.20, sym=0, dA3=0, T=0) 
+
+DECLARE
+%{
+double A1;
+double lambda_i;
+double lambda_f;
+double dm;
+double ds;
+double ki;
+double kf;
+double A5;
+double q0;
+double ql;
+double qm;
+double Q;
+double DQ;
+double A3;
+double A4; 
+double phi1;
+double phi2;
+double DeltaA3;
+double C_Intensity;
+double C_mosaic;
+double a_star;
+double c_star;
+%}
+
+USERVARS %{
+  double tpropt;
+  int UNIONFLAG;
+  int phonon_flag;
+%}
+
+INITIALIZE
+%{
+
+// Basics of the scattering
+
+dm=3.355;
+
+ds= 4.873;
+
+qm = 2*PI/dm;
+
+lambda_i = (2.0*PI)/(sqrt(Ei)*0.694692);
+
+A1 = asin((lambda_i)/(2.0*dm))*180.0/PI;
+
+lambda_f = (2.0*PI)/(sqrt(Ef)*0.694692);
+
+A5 = asin((lambda_f)/(2.0*dm))*180.0/PI;
+
+q0 = 2.0*PI/ds;
+
+ql = sqrt(h*h+k*k);
+
+ki = sqrt(Ei)*0.694692;
+
+kf = sqrt(Ef)*0.694692;
+
+a_star = 2*(PI/2.4612)*1/sqrt(3)*2*(PI/2.4612)*1/sqrt(3)+2*(PI/2.4612)*2*(PI/2.4612);
+c_star = (2*PI/6.7079)*(2*PI/6.7079);
+
+Q = sqrt(h*h*a_star*+l*l*c_star);
+
+
+// Misalignment
+
+DeltaA3 = 1;
+
+// Calculate angles from rlu
+if (sym==0){
+	A4 = acos(-(Q*Q-ki*ki-kf*kf)/(2.0*ki*kf))*180.0/PI;
+	A3 = acos(-(kf*kf-ki*ki-Q*Q)/(2.0*ki*Q))*180.0/PI+atan2(k,h)*180.0/PI+dA3;
+}
+
+if (sym==1){
+	A4 = -acos(-(Q*Q-ki*ki-kf*kf)/(2.0*ki*kf))*180.0/PI;
+	A3 = -acos(-(kf*kf-ki*ki-Q*Q)/(2.0*ki*Q))*180.0/PI+atan2(k,h)*180.0/PI+dA3;
+}
+
+// Calculate angles for focusing monochromator
+phi1 = 180/PI*(0.026/1.54)*(ki/qm);
+phi2 = 180/PI*(0.052/1.54)*(ki/qm);
+
+%}
+
+TRACE
+
+COMPONENT origin = Progress_bar()
+AT (0, 0, 0) RELATIVE ABSOLUTE
+
+// insert components here (e.g. Insert -> Source -> ...)
+
+COMPONENT source_maxwell_3 = Source_Maxwell_3(
+    yheight=0.12, 
+    xwidth=0.03, 
+    Lmin=lambda_i*0.98, 
+    Lmax=lambda_i*1.02,
+    dist=1.5, 
+    focus_xw=0.03,
+    focus_yh=0.12, 
+    T1=150.42, 
+    T2=38.74, 
+    T3=14.84, 
+    I1=3.67E11, 
+    I2=3.64E11, 
+    I3=0.95E11)
+AT (0, 0, 0) RELATIVE origin
+
+COMPONENT guide = Guide(
+    w1=0.03, 
+    h1=0.12, 
+    w2=0.03, 
+    h2=0.12, 
+    l=24.5)
+AT (0, 0, 1.5) RELATIVE origin
+
+COMPONENT psd_monitor_mono = PSD_monitor(
+    filename="monochromator", 
+    xwidth=0.05, 
+    yheight=0.15, 
+    restore_neutron=1)
+AT (0, 0, 26.1) RELATIVE origin
+
+
+COMPONENT a1 = Arm()
+AT (0, 0, 26.4) RELATIVE origin
+
+/* Her kommer de 5 monochromator slaps, der giver den samlede monochromator */
+
+COMPONENT monochromator_flat1 = Monochromator_flat(
+    zwidth=0.15, 
+    yheight=0.025, 
+    mosaich=37, 
+    mosaicv=37, 
+    Q=1.87325, 
+    DM=3.35416)
+AT (0, -0.052, 0) RELATIVE a1
+ROTATED (0, A1, mono_focus*phi2) RELATIVE PREVIOUS
+
+COMPONENT monochromator_flat2 = Monochromator_flat(
+    zwidth=0.15, 
+    yheight=0.025, 
+    mosaich=37, 
+    mosaicv=37, 
+    Q=1.87325, 
+    DM=3.35416)
+AT (0, 0.026, 0) RELATIVE PREVIOUS
+ROTATED (0, A1, mono_focus*phi1) RELATIVE a1
+
+COMPONENT monochromator_flat3 = Monochromator_flat(
+    zwidth=0.15, 
+    yheight=0.025, 
+    mosaich=37, 
+    mosaicv=37, 
+    Q=1.87325, 
+    DM=3.35416)
+AT (0, 0.026, 0) RELATIVE PREVIOUS
+ROTATED (0, A1, 0) RELATIVE a1
+
+COMPONENT monochromator_flat4 = Monochromator_flat(
+    zwidth=0.15, 
+    yheight=0.025, 
+    mosaich=37, 
+    mosaicv=37, 
+    Q=1.87325, 
+    DM=3.35416)
+AT (0, 0.026, 0) RELATIVE PREVIOUS
+ROTATED (0, A1, -mono_focus*phi1) RELATIVE a1
+
+COMPONENT monochromator_flat5 = Monochromator_flat(
+    zwidth=0.15, 
+    yheight=0.025, 
+    mosaich=37, 
+    mosaicv=37, 
+    Q=1.87325, 
+    DM=3.35416)
+AT (0, 0.026, 0) RELATIVE PREVIOUS
+ROTATED (0, A1, -mono_focus*phi2) RELATIVE a1
+
+
+/* Monochromator end */ 
+
+COMPONENT a2 = Arm()
+AT (0, 0, 0) RELATIVE a1
+ROTATED (0, 2*A1, 0) RELATIVE a1
+
+COMPONENT psd_monitor_after_mono = PSD_monitor(
+    filename="after_mono", 
+    xwidth=0.1, 
+    yheight=0.1, 
+    restore_neutron=1)
+AT (0, 0, 0.999) RELATIVE a2
+
+COMPONENT collimator_linear = Collimator_linear(
+    xwidth=0.08, 
+    yheight=0.20, 
+    length = 0.20,
+    divergence=col_div_1)
+AT (0, 0, 1.0) RELATIVE a2
+
+COMPONENT slit = Slit(
+    xmin = -slit_left,
+    xmax = slit_right,
+    ymin = -slit_bottom,
+    ymax = slit_top)
+AT (0, 0, 1.54-0.05-l_cryostat) RELATIVE a2
+
+COMPONENT psd_monitor_sample = PSD_monitor(
+    filename="sample", 
+    xwidth=0.1, 
+    yheight=0.1, 
+    restore_neutron=1)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT e_monitor_sample = E_monitor(
+    nE=200, 
+    filename="EmonSample", 
+    xwidth=0.1, 
+    yheight=0.1, 
+    Emin=4.5, 
+    Emax=5.5, 
+    restore_neutron=1)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+COMPONENT a3 = Arm()
+AT (0, 0, 1.54) RELATIVE a2
+
+SPLIT 10
+
+COMPONENT a4 = Arm()
+AT (0, 0, 0) RELATIVE a3
+ROTATED (0, A4, 0) RELATIVE a3
+
+COMPONENT a5 = Arm()
+AT (0, 0, 1.26) RELATIVE a4
+
+/*The two following components can be chosen for the sample*/
+
+COMPONENT mirror_comp = Mirror(
+    reflect="reflection.txt", 
+    xwidth=0.05, 
+    yheight=0.01, 
+    center=1,
+    f_reflection = 0.05)
+AT (0, 0, 0) RELATIVE a4
+EXTEND %{
+if (SCATTERED==0)
+{tpropt=1E-6;
+x=x-tpropt*vx;
+y=y-tpropt*vy;
+z=z-tpropt*vz;
+t=t-tpropt;
+UNIONFLAG =1;}
+else{UNIONFLAG=0;}
+%}
+
+COMPONENT Vanadium_incoherent = Incoherent_process(
+    sigma=0.1,
+    unit_cell_volume=35.29)
+AT (0 ,0 ,0)  RELATIVE ABSOLUTE
+
+//COMPONENT PG_powder = Powder_process(reflections="C_graphite.laz") 
+//AT (0 ,0 ,0) RELATIVE ABSOLUTE
+
+/*COMPONENT PG_powder = Powder_process(
+    reflections="C_graphite.laz", 
+    Vc=35.29, 
+    delta_d_d=delta_d_d, 
+    DW=1, 
+    nb_atoms=4)
+AT (0, 0, 0) RELATIVE ABSOLUTE*/
+
+COMPONENT PG_single_crystal = Single_crystal_process( 
+    delta_d_d=delta_d_d,
+    mosaic = mosaic,
+    recip_cell = 0, 
+    ax= 2.13389, 
+    ay= 1.232, 
+    az= 0,
+    bx = -2.13389, 
+    by = 1.232, 
+    bz = 0,
+    cx = 0, 
+    cy = 0, 
+    cz = 6.711, 
+    reflections="C_graphite.lau", 
+    barns=0, 
+    packing_factor=1)
+AT (0, 0, 0) RELATIVE ABSOLUTE
+ROTATED (0 ,0 ,0) RELATIVE ABSOLUTE
+
+
+COMPONENT phononsimple_process = PhononSimple_process(
+    packing_factor = 100, 
+    a=6.71, 
+    b=6.64, 
+    M=12.01, 
+    c=Csample, 
+    DW=1, 
+    T=290)
+AT (0, 0, 0) RELATIVE ABSOLUTE
+
+COMPONENT sample_material = Union_make_material(process_string="Vanadium_incoherent,PG_single_crystal,phononsimple_process" , 
+    my_absorption =100*1.2/33)
+AT (0 ,0, 0) RELATIVE a4
+
+COMPONENT sample_volume = Union_box( 
+   xwidth = 0.05,
+   yheight=0.01, 
+   zdepth=0.001,
+   priority=1,
+   material_string="sample_material")
+AT (0 ,0 ,-0.00051) RELATIVE a4
+ROTATED (0, 0 ,0) RELATIVE a4
+
+COMPONENT Master = Union_master()
+WHEN(UNIONFLAG==1)
+AT(0,0,0) RELATIVE a4
+EXTEND %{
+if (scattered_flag_VP[1][3] > 0) phonon_flag = 1;
+else phonon_flag = 0;
+%}
+
+/*Detector par of the instrument*/
+
+/*COMPONENT monitor_nd = Monitor_nD(
+    yheight=0.1, 
+    options = "banana, theta bins=400 limits=[15 175]", filename = "My_datafile",
+    radius=1)
+AT (0, 0, 0) RELATIVE a3 
+*/
+
+COMPONENT collimator_linear_2 = Collimator_linear(
+    xwidth=0.08, 
+    yheight=0.2, 
+    length = 0.2,
+    divergence=col_div_2)
+AT (0, 0, 0.8) RELATIVE a4
+
+COMPONENT psd_monitor = PSD_monitor(
+    nx=128, 
+    ny=128, 
+    filename="after_sample", 
+    xwidth=0.1, 
+    yheight=0.2, 
+    restore_neutron=1)
+AT (0, 0, 1.16) RELATIVE a4
+
+COMPONENT monochromator_flat6 = Monochromator_flat(
+    zwidth=0.15, 
+    yheight=0.12, 
+    mosaich=37, 
+    mosaicv=37, 
+    Q=1.87325, 
+    DM=3.35416)
+AT (0, 0, 0) RELATIVE a5
+ROTATED (0,A5,0) RELATIVE a5
+
+COMPONENT a6 = Arm()
+AT (0, 0, 0) RELATIVE a5
+ROTATED (0, 2*A5, 0) RELATIVE a5
+
+/*COMPONENT e_monitor = E_monitor(
+    nE=1, 
+    filename="energy_mon", 
+    xwidth=0.3, 
+    yheight=0.5, 
+    Emin=0, 
+    Emax=10)
+AT (0, 0, 0.35) RELATIVE a6*/
+
+COMPONENT psd_monitor2 = PSD_monitor(
+    nx=128, 
+    ny=128, 
+    filename="PSD_monitor", 
+    xwidth=detector_x, 
+    yheight=detector_y)
+AT (0, 0, 0.35) RELATIVE a6
+
+/*COMPONENT psd_monitor_4pi = PSD_monitor_4PI(
+    nx=138, 
+    ny=138, 
+    filename="4pi_monitor", 
+    radius=1.26)
+AT (0, 0, 0) RELATIVE a3*/
+
+FINALLY
+%{
+%}
+
+END

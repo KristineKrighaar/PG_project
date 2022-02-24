@@ -23,7 +23,7 @@
 *
 * %E
 *******************************************************************************/
-DEFINE INSTRUMENT template_body_simple(z=0, theta_s=90, virtual_count=1, Csample=26, T=290)
+DEFINE INSTRUMENT template_body_simple(z=0, theta_s=90, Csample=26, T=290)
 
 DECLARE
 %{
@@ -55,6 +55,7 @@ AT (0, 0, 0) RELATIVE ABSOLUTE
     repeat_count=virtual_count)
 AT (0, 0, z) RELATIVE origin*/
 
+  
 COMPONENT mcpl_input = MCPL_input(
     filename="Virtual_neutron_3meV.mcpl.gz")
 AT (0, 0, z) RELATIVE origin
@@ -92,7 +93,7 @@ ROTATED (0,theta_s,0) RELATIVE sample_position
 AT (0, 0, 0) RELATIVE sample_rotation*/
 
 
-COMPONENT mirror_comp = Mirror(
+/*COMPONENT mirror_comp = Mirror(
     reflect="reflection_0.001.txt", 
     xwidth=0.05, 
     yheight=0.01, 
@@ -109,7 +110,11 @@ z=z-tpropt*vz;
 t=t-tpropt;
 UNIONFLAG =1;}
 else{UNIONFLAG=0;}
-%}
+%}*/
+
+
+COMPONENT init = Union_init()
+AT (0,0,0) ABSOLUTE
 
 COMPONENT incoherent_process = Incoherent_process(
     sigma=0.1, 
@@ -182,9 +187,12 @@ COMPONENT Master = Union_master()
 WHEN(UNIONFLAG==1)
 AT(0,0,-0.00051) RELATIVE sample_rotation
 EXTEND %{
-if (scattered_flag_VP[1][3] > 0) phonon_flag = 1;
-else phonon_flag = 0;
+  /* if (scattered_flag_VP[1][3] > 0) phonon_flag = 1;
+     else phonon_flag = 0;*/
 %}
+
+COMPONENT stop = Union_stop()
+AT (0,0,0) ABSOLUTE
 
 COMPONENT monitor_nd = Monitor_nD(
     xwidth=2, 
@@ -195,14 +203,14 @@ COMPONENT monitor_nd = Monitor_nD(
 AT (0, 0, 0) RELATIVE sample_position
 ROTATED (0, 0, 0) RELATIVE sample_position
 
-COMPONENT monitor_nd_phonon_only = Monitor_nD(
+/*COMPONENT monitor_nd_phonon_only = Monitor_nD(
     xwidth=2,
     yheight=0.1,
     options="banana, theta bins=830 limits=[-178.89 -13.09]", 
     filename="My_data_phonon_only")
 WHEN (phonon_flag == 1)
 AT (0, 0, 0) RELATIVE sample_position
-ROTATED (0, 0, 0) RELATIVE sample_position
+ROTATED (0, 0, 0) RELATIVE sample_position*/
 /* The resolution of the  of the detectors s set so one detector cores an angle of 0.1998 degrees*/
 
 
