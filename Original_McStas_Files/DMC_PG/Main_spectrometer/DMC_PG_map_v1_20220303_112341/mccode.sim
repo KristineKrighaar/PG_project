@@ -1,0 +1,28 @@
+McStas simulation description file for template_body_simple.
+Date:    Thu Mar  3 11:23:41 2022
+Program: McStas 3.1 - Nov. 24, 2021
+
+begin instrument: template_body_simple
+  File: /home/kristine/Documents/GitHub/PG_project/Original_McStas_Files/DMC_PG/Main_spectrometer/DMC_PG_map_v1_20220303_112341/mccode
+  Source: DMC_PG_map_v1.instr
+  Parameters:  z(double) theta_s(double) Csample(double) T(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: /home/kristine/Documents/GitHub/PG_project/Original_McStas_Files/DMC_PG/Main_spectrometer/DMC_PG_map_v1_20220303_112341
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 3.1 - Nov. 24, 2021
+  Instrument: DMC_PG_map_v1.instr
+  Ncount: 10000000
+  Trace: no
+  Gravitation: no
+  Seed: 1646303021385637
+  Directory: /home/kristine/Documents/GitHub/PG_project/Original_McStas_Files/DMC_PG/Main_spectrometer/DMC_PG_map_v1_20220303_112341
+  Param: z=0
+  Param: theta_s=150
+  Param: Csample=26
+  Param: T=290
+end simulation

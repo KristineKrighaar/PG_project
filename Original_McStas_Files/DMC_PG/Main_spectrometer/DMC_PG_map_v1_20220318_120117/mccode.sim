@@ -1,0 +1,50 @@
+McStas simulation description file for template_body_simple.
+Date:    Fri Mar 18 12:01:28 2022
+Program: McStas 3.1 - Nov. 24, 2021
+
+begin instrument: template_body_simple
+  File: /home/kristine/Documents/GitHub/PG_project/Original_McStas_Files/DMC_PG/Main_spectrometer/DMC_PG_map_v1_20220318_120117/mccode
+  Source: DMC_PG_map_v1.instr
+  Parameters:  z(double) theta_s(double) Csample(double) T(double) repeat_count(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: /home/kristine/Documents/GitHub/PG_project/Original_McStas_Files/DMC_PG/Main_spectrometer/DMC_PG_map_v1_20220318_120117
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 3.1 - Nov. 24, 2021
+  Instrument: DMC_PG_map_v1.instr
+  Ncount: 1000
+  Trace: no
+  Gravitation: no
+  Seed: 1647601288997805
+  Directory: /home/kristine/Documents/GitHub/PG_project/Original_McStas_Files/DMC_PG/Main_spectrometer/DMC_PG_map_v1_20220318_120117
+  Nodes: 4
+  Param: z=0
+  Param: theta_s=220
+  Param: Csample=26
+  Param: T=290
+  Param: repeat_count=1
+end simulation
+
+begin data
+  Date: Fri Mar 18 12:02:06 2022 (1647601326)
+  type: array_1d(830)
+  Source: template_body_simple (DMC_PG_map_v1.instr)
+  component: monitor_nd
+  position: 0 0 0.01
+  title: Longitude [deg] monitor
+  Ncount: 92011704
+  filename: My_data.th
+  statistics: X0=-137.465; dX=50.1336;
+  signal: Min=0; Max=518.338; Mean=67.0477;
+  values: 55649.6 189.357 1.33805e+06
+  xvar: th
+  yvar: (I,I_err)
+  xlabel: Longitude [deg]
+  ylabel: Intensity [n/s/bin]
+  xlimits: -178.89 -13.09
+  variables: th I I_err N
+end data

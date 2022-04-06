@@ -1,0 +1,145 @@
+# Format: McCode with text headers
+# URL: http://www.mccode.org
+# Creator: McStas 3.1 - Nov. 24, 2021
+# Instrument: DMC_guide.instr
+# Ncount: 400000000
+# Trace: no
+# Gravitation: no
+# Seed: 1647355188514290
+# Directory: 1E9_3meV
+# Nodes: 5
+# Param: div=20
+# Param: Ei=3
+# Date: Tue Mar 15 15:44:44 2022 (1647355484)
+# type: array_1d(20)
+# Source: template_body_simple (DMC_guide.instr)
+# component: e_monitor
+# position: 0 0 41.203
+# title: Energy monitor
+# Ncount: 2000000000
+# filename: E_guide.dat
+# statistics: X0=3.75; dX=0;
+# signal: Min=0; Max=2.89081e+08; Mean=1.4454e+07;
+# values: 2.89081e+08 26552.6 4.38423e+08
+# xvar: E
+# yvar: (I,I_err)
+# xlabel: Energy [meV]
+# ylabel: Intensity
+# xlimits: 0 50
+# variables: E I I_err N
+1.25 0 0 0 
+3.75 289080758.1 26552.5935 438422713 
+6.25 0 0 0 
+8.75 0 0 0 
+11.25 0 0 0 
+13.75 0 0 0 
+16.25 0 0 0 
+18.75 0 0 0 
+21.25 0 0 0 
+23.75 0 0 0 
+26.25 0 0 0 
+28.75 0 0 0 
+31.25 0 0 0 
+33.75 0 0 0 
+36.25 0 0 0 
+38.75 0 0 0 
+41.25 0 0 0 
+43.75 0 0 0 
+46.25 0 0 0 
+48.75 0 0 0 
+# Format: McCode with text headers
+# URL: http://www.mccode.org
+# Creator: McStas 3.1 - Nov. 24, 2021
+# Instrument: DMC_guide.instr
+# Ncount: 2000000000
+# Trace: no
+# Gravitation: no
+# Seed: 1647355092609418
+# Directory: 1E9_3meV
+# Param: div=20
+# Param: Ei=3
+# Date: Tue Mar 15 15:58:39 2022 (1647356319)
+# type: array_1d(20)
+# Source: template_body_simple (DMC_guide.instr)
+# component: e_monitor
+# position: 0 0 41.203
+# title: Energy monitor
+# Ncount: 2000000000
+# filename: E_guide.dat
+# statistics: X0=3.75; dX=0;
+# signal: Min=0; Max=2.89089e+08; Mean=1.44544e+07;
+# values: 2.89089e+08 26553.1 4.38431e+08
+# xvar: E
+# yvar: (I,I_err)
+# xlabel: Energy [meV]
+# ylabel: Intensity
+# xlimits: 0 50
+# variables: E I I_err N
+1.25 0 0 0 
+3.75 289088712.9 26553.05575 438430727 
+6.25 0 0 0 
+8.75 0 0 0 
+11.25 0 0 0 
+13.75 0 0 0 
+16.25 0 0 0 
+18.75 0 0 0 
+21.25 0 0 0 
+23.75 0 0 0 
+26.25 0 0 0 
+28.75 0 0 0 
+31.25 0 0 0 
+33.75 0 0 0 
+36.25 0 0 0 
+38.75 0 0 0 
+41.25 0 0 0 
+43.75 0 0 0 
+46.25 0 0 0 
+48.75 0 0 0 
+# Format: McCode with text headers
+# URL: http://www.mccode.org
+# Creator: McStas 3.1 - Nov. 24, 2021
+# Instrument: DMC_guide.instr
+# Ncount: 2000000000
+# Trace: no
+# Gravitation: no
+# Seed: 1647355149664567
+# Directory: 1E9_3meV
+# Param: div=20
+# Param: Ei=3
+# Date: Tue Mar 15 15:59:53 2022 (1647356393)
+# type: array_1d(20)
+# Source: template_body_simple (DMC_guide.instr)
+# component: e_monitor
+# position: 0 0 41.203
+# title: Energy monitor
+# Ncount: 2000000000
+# filename: E_guide.dat
+# statistics: X0=3.75; dX=0;
+# signal: Min=0; Max=2.89039e+08; Mean=1.44519e+07;
+# values: 2.89039e+08 26550.2 4.38453e+08
+# xvar: E
+# yvar: (I,I_err)
+# xlabel: Energy [meV]
+# ylabel: Intensity
+# xlimits: 0 50
+# variables: E I I_err N
+1.25 0 0 0 
+3.75 289038847 26550.19601 438452587 
+6.25 0 0 0 
+8.75 0 0 0 
+11.25 0 0 0 
+13.75 0 0 0 
+16.25 0 0 0 
+18.75 0 0 0 
+21.25 0 0 0 
+23.75 0 0 0 
+26.25 0 0 0 
+28.75 0 0 0 
+31.25 0 0 0 
+33.75 0 0 0 
+36.25 0 0 0 
+38.75 0 0 0 
+41.25 0 0 0 
+43.75 0 0 0 
+46.25 0 0 0 
+48.75 0 0 0 

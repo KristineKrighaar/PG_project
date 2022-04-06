@@ -1,0 +1,27 @@
+begin instrument:
+  Creator: mcstas 3.1
+  Source: DMC_PG_map_v1.instr
+  Parameters:  theta_s
+  Trace_enabled: no
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation
+Date: Tue Mar 15 16 34 2022
+Ncount: 1000000
+Numpoints: 2
+Param: theta_s = 245, theta_s = 255
+end simulation
+
+begin data
+type: multiarray_1d(2)
+title: Scan of theta_s
+xvars: theta_s
+yvars: (psd_monitor_I,psd_monitor_ERR) (monitor_nd_I,monitor_nd_ERR)
+xlabel: 'theta_s'
+ylabel: 'Intensity'
+xlimits: 245 255
+filename: mccode.dat
+variables: theta_s psd_monitor_I psd_monitor_ERR monitor_nd_I monitor_nd_ERR
+end data

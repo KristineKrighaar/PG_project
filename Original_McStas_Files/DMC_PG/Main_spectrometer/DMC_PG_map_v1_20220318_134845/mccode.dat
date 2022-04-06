@@ -1,0 +1,23 @@
+# Instrument-source: 'DMC_PG_map_v1.instr'
+# Date: Fri Mar 18 13 48 2022
+# Ncount: 1000
+# Numpoints: 11
+# Param: theta_s = 90
+# type: multiarray_1d(11)
+# title: Scan of theta_s
+# xlabel: 'theta_s'
+# ylabel: 'Intensity'
+# xvars: theta_s
+# yvars: (psd_monitor_I,psd_monitor_ERR) (e_monitor_I,e_monitor_ERR) (monitor_nd_I,monitor_nd_ERR)
+# xlimits: -90 90
+# filename: mccode.dat
+# variables: theta_s psd_monitor_I psd_monitor_ERR e_monitor_I e_monitor_ERR monitor_nd_I monitor_nd_ERR
+90 9.35716E+6 4909.74 8.59164E+6 4715.23 3370.03 91.1257
+72 9.35716E+6 4909.74 8.59164E+6 4715.23 257.18 11.0319
+54 9.35716E+6 4909.74 8.59164E+6 4715.23 231.896 7.88097
+36 9.35716E+6 4909.74 8.59164E+6 4715.23 225.657 7.21179
+18 9.35716E+6 4909.74 8.59164E+6 4715.23 225.681 7.21218
+0 9.35716E+6 4909.74 8.59164E+6 4715.23 225.551 7.21103
+-18 9.35716E+6 4909.74 8.59164E+6 4715.23 226.358 7.25616
+-36 9.35716E+6 4909.74 8.59164E+6 4715.23 233.366 7.88129
+-54 9.35716E+6 4909.74 8.59164E+6 4715.23 238.049 8.54154

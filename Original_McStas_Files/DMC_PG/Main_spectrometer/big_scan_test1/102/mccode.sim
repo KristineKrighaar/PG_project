@@ -1,0 +1,72 @@
+McStas simulation description file for template_body_simple.
+Date:    Fri Mar 18 10:26:40 2022
+Program: McStas 3.1 - Nov. 24, 2021
+
+begin instrument: template_body_simple
+  File: big_scan_test1/102/mccode
+  Source: DMC_PG_map_v1.instr
+  Parameters:  z(double) theta_s(double) Csample(double) T(double) repeat_count(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: big_scan_test1/102
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 3.1 - Nov. 24, 2021
+  Instrument: DMC_PG_map_v1.instr
+  Ncount: 1000000
+  Trace: no
+  Gravitation: no
+  Seed: 1647595600810720
+  Directory: big_scan_test1/102
+  Nodes: 4
+  Param: z=0
+  Param: theta_s=192
+  Param: Csample=26
+  Param: T=290
+  Param: repeat_count=1
+end simulation
+
+begin data
+  Date: Fri Mar 18 10:27:22 2022 (1647595642)
+  type: array_2d(90, 90)
+  Source: template_body_simple (DMC_PG_map_v1.instr)
+  component: psd_monitor
+  position: 0 0 0.001
+  title: PSD monitor
+  Ncount: 92011704
+  filename: pre.dat
+  statistics: X0=0.00122405; dX=0.840921; Y0=0.00302355; dY=3.04801;
+  signal: Min=0; Max=2744.17; Mean=289.422;
+  values: 2.34432e+06 1228.75 1.15259e+07
+  xvar: X 
+  yvar: Y 
+  xlabel: X position [cm]
+  ylabel: Y position [cm]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -5 5 -10 10
+  variables: I I_err N
+end data
+
+begin data
+  Date: Fri Mar 18 10:27:22 2022 (1647595642)
+  type: array_1d(830)
+  Source: template_body_simple (DMC_PG_map_v1.instr)
+  component: monitor_nd
+  position: 0 0 0.01
+  title: Longitude [deg] monitor
+  Ncount: 92011704
+  filename: My_data.th
+  statistics: X0=-137.162; dX=50.3222;
+  signal: Min=0; Max=526.29; Mean=67.47;
+  values: 56000.1 190.025 1.43106e+06
+  xvar: th
+  yvar: (I,I_err)
+  xlabel: Longitude [deg]
+  ylabel: Intensity [n/s/bin]
+  xlimits: -178.89 -13.09
+  variables: th I I_err N
+end data

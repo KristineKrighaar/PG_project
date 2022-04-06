@@ -54,16 +54,16 @@
 
 DEFINE COMPONENT PhononSimple_process
 DEFINITION PARAMETERS ()
-SETTING PARAMETERS(packing_factor=1,unit_cell_volume=13.8,interact_fraction=-1,a=4.95,c=10,M=207.2,b=9.4,T=290,DW=1,longitudinal=1,transverse=1)
-OUTPUT PARAMETERS (This_process,PhononSimple_storage,effective_my_scattering)
+SETTING PARAMETERS(packing_factor=1,unit_cell_volume=13.8,interact_fraction=-1,a=4.95,c=10,M=207.2,b=9.4,T=290,DW=1,longitudinal=1,transverse=1, string init="init")
+OUTPUT PARAMETERS ()
 
 SHARE
 %{
 #ifndef Union
 #define Union $Revision: 0.8 $
 
-#include "Union_functions.c"
-#include "Union_initialization.c"
+%include "Union_functions.c"
+%include "Union_initialization.c"
 
 #endif
 
@@ -97,7 +97,7 @@ struct PhononSimple_physics_storage_struct{
     double my_constant;
     double Temp;
     double solid_angle;
-    double parms[12];
+    double parms[10];
     int enable_longitudinal;
     int enable_transverse;
     
@@ -223,7 +223,7 @@ double zridd_union(double (*func)(double*), double x1, double x2, double *parms,
       /* dispersion in units of meV  */
       double vi, vf, vv_x, vv_y, vv_z, vi_x, vi_y, vi_z;
       double q, qx, qy, qz, Jq, res_phonon, res_neutron;
-      double ah, a, c, mode;
+      double ah, a, c;
 
       vf=parms[0];
       vi=parms[1];
@@ -235,8 +235,8 @@ double zridd_union(double (*func)(double*), double x1, double x2, double *parms,
       vi_z=parms[7];
       a   =parms[8];
       c   =parms[9];
-      mode=parms[11];
       ah=a/2.0;
+
 /*    printf("omega_q called with parameters vf= %g, vi=%g (%g %g %g) vv=(%g, %g, %g) \n",vf,vi,vi_x,vi_y,vi_z,vv_x,vv_y,vv_z); */
       qx=V2K*(vi_x-vf*vv_x);
       qy=V2K*(vi_y-vf*vv_y);
@@ -250,10 +250,8 @@ double zridd_union(double (*func)(double*), double x1, double x2, double *parms,
        printf("in omega_q: q=(%g %g %g), omega_phonon=%g, omega_neutron=%g\n ",
              qx,qy,qz,res_phonon,res_neutron); */
 /*      printf("omega_q returning %g - %g\n",res_phonon,res_neutron); */
-      if (0==0)
-        return (res_phonon - res_neutron);
-      else
-        return (res_phonon);
+
+      return (res_phonon - res_neutron);
     }
 #undef UNUSED
 #undef MAXRIDD
@@ -261,14 +259,14 @@ double zridd_union(double (*func)(double*), double x1, double x2, double *parms,
 
 // Function for calculating my, the inverse penetration depth (for only this scattering process).
 // The input for this function and its order may not be changed, but the names may be updated.
-int PhononSimple_my(double *my, double *k_initial, union data_transfer_union data_transfer, struct focus_data_struct *focus_data) {
+int PhononSimple_physics_my(double *my, double *k_initial, union data_transfer_union data_transfer, struct focus_data_struct *focus_data, _class_particle *_particle) {
 
    double k_length = sqrt(k_initial[0]*k_initial[0]+k_initial[1]*k_initial[1]+k_initial[2]*k_initial[2]);
    //printf("energy = %f \n",k_length*K2V*k_length*K2V*VS2E);
    double v_i = k_length * K2V;
    
    double a,b,c,T;
-   double vf_list[8]; /* List of allowed final velocities */
+   double vf_list[6]; /* List of allowed final velocities */
    int nf,index;
    double *parms;
    double f1,f2,J_factor;
@@ -278,7 +276,7 @@ int PhononSimple_my(double *my, double *k_initial, union data_transfer_union dat
    double k_f[3],k_final;
    double kappa2,kappa_x,kappa_y,kappa_z;
    double solid_angle;
-     
+   
    a=data_transfer.pointer_to_a_PhononSimple_storage_struct->aa;
    b=data_transfer.pointer_to_a_PhononSimple_storage_struct->bb;
    c=data_transfer.pointer_to_a_PhononSimple_storage_struct->cc;
@@ -300,16 +298,13 @@ int PhononSimple_my(double *my, double *k_initial, union data_transfer_union dat
    data_transfer.pointer_to_a_PhononSimple_storage_struct->parms[7] = k_initial[2]*K2V;
    data_transfer.pointer_to_a_PhononSimple_storage_struct->parms[8] = a;
    data_transfer.pointer_to_a_PhononSimple_storage_struct->parms[9] = c;
-   data_transfer.pointer_to_a_PhononSimple_storage_struct->parms[11] = 0;
    
    parms = &data_transfer.pointer_to_a_PhononSimple_storage_struct->parms[0];
    
    nf = 0;
    findroots_union(0, v_i, v_i+2*c*V2K/VS2E, vf_list, &nf, omega_q_union, parms);
    index=(int)floor(rand01()*nf);
-   
-   
-   data_transfer.pointer_to_a_PhononSimple_storage_struct->parms[11] = 1;
+
    if (nf > 4 || index > 3) {
      printf("index = %d, nf = %d \n",index, nf);
      printf("energy = %f \n",k_length*K2V*k_length*K2V*VS2E);
@@ -421,7 +416,7 @@ int PhononSimple_my(double *my, double *k_initial, union data_transfer_union dat
 
 // Function that provides description of a basic scattering event.
 // Do not change the
-int PhononSimple_scattering(double *k_final, double *k_initial, double *weight, union data_transfer_union data_transfer, struct focus_data_struct *focus_data) {
+int PhononSimple_physics_scattering(double *k_final, double *k_initial, double *weight, union data_transfer_union data_transfer, struct focus_data_struct *focus_data, _class_particle *_particle) {
 
     // k_final and k_initial are passed as pointers to double vector[3]
     //double k_length = data_transfer.pointer_to_a_Template_physics_storage_struct->k_init;
@@ -446,6 +441,15 @@ int PhononSimple_scattering(double *k_final, double *k_initial, double *weight, 
 
 };
 
+// These lines help with future error correction, and tell other Union components
+//  that at least one process have been defined.
+#ifndef PROCESS_DETECTOR
+    #define PROCESS_DETECTOR dummy
+#endif
+
+#ifndef PROCESS_PHONONSIMPLE_DETECTOR
+    #define PROCESS_PHONONSIMPLE_DETECTOR dummy
+#endif
 %}
 
 DECLARE
@@ -461,13 +465,6 @@ double sigma_const;
 struct global_process_element_struct global_process_element;
 struct scattering_process_struct This_process;
 
-// These lines help with future error correction, and tell other Union components
-//  that at least one process have been defined.
-#ifndef PROCESS_DETECTOR
-    // Obsolete
-	//struct pointer_to_global_process_list global_process_list = {0,NULL};
-	#define PROCESS_DETECTOR dummy
-#endif
 %}
 
 INITIALIZE
@@ -518,10 +515,13 @@ INITIALIZE
   //This_process.non_isotropic_rot_index = -1; // Yes (powder)
   This_process.non_isotropic_rot_index =  1;  // No (single crystal)
 
+  // The type of the process must be saved in the global enum process
+  This_process.eProcess = PhononSimple;
+
   // Packing the data into a structure that is transported to the main component
   This_process.data_transfer.pointer_to_a_PhononSimple_storage_struct = &PhononSimple_storage;
-  This_process.probability_for_scattering_function = &PhononSimple_my;
-  This_process.scattering_function = &PhononSimple_scattering;
+  This_process.probability_for_scattering_function = &PhononSimple_physics_my;
+  This_process.scattering_function = &PhononSimple_physics_scattering;
 
   // This will be the same for all process's, and can thus be moved to an include.
   sprintf(This_process.name,NAME_CURRENT_COMP);
@@ -530,7 +530,9 @@ INITIALIZE
   sprintf(global_process_element.name,NAME_CURRENT_COMP);
   global_process_element.component_index = INDEX_CURRENT_COMP;
   global_process_element.p_scattering_process = &This_process;
-  add_element_to_process_list(&global_process_list,global_process_element);
+  
+  struct pointer_to_global_process_list *global_process_list = COMP_GETPAR3(Union_init, init, global_process_list);
+  add_element_to_process_list(global_process_list,global_process_element);
  %}
 
 TRACE

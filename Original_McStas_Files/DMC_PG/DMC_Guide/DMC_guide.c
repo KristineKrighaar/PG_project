@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: DMC_guide.instr (template_body_simple)
- * Date:       Fri Feb 18 14:15:54 2022
+ * Date:       Tue Mar 15 16:25:53 2022
  * File:       ./DMC_guide.c
  * CFLAGS= -I@MCCODE_LIB@/libs/mcpl -L@MCCODE_LIB@/libs/mcpl -lmcpl
  */
@@ -8584,8 +8584,8 @@ int _mcpl_output_setpos(void)
     stracpy(_mcpl_output_var._parameters.userflag, "" ? "" : "", 16384);
   else 
   _mcpl_output_var._parameters.userflag[0]='\0';
-  if("Virtual_neutron_3meV" && strlen("Virtual_neutron_3meV"))
-    stracpy(_mcpl_output_var._parameters.filename, "Virtual_neutron_3meV" ? "Virtual_neutron_3meV" : "", 16384);
+  if("Virtual_neutron_14p2meV_1E9" && strlen("Virtual_neutron_14p2meV_1E9"))
+    stracpy(_mcpl_output_var._parameters.filename, "Virtual_neutron_14p2meV_1E9" ? "Virtual_neutron_14p2meV_1E9" : "", 16384);
   else 
   _mcpl_output_var._parameters.filename[0]='\0';
   if("" && strlen(""))

@@ -57,7 +57,7 @@ double ki;
 double kf;
 %}
 
-USERVARS 
+USERVARS %{
 int UNIONFLAG;
 int phonon_flag;
 double tpropt;
@@ -306,18 +306,27 @@ COMPONENT psd_monitor_bef_analyzer = PSD_monitor(
     restore_neutron=1)
 AT (0, 0, 1.16) RELATIVE a4
 
-COMPONENT mirror_comp = Mirror(
+COMPONENT mirror_comp = Mirror_Kristine(
     reflect="reflection_0.001.txt", 
     xwidth=0.05, 
-    yheight=0.1, 
+    yheight=0.01, 
     center=1,
     f_reflection = 0.000047079)
-AT (0, 0, -0.00053) RELATIVE a5
-ROTATED (0, -A5, 0) RELATIVE a5
+AT (0, 0, -0.001+0.0001) RELATIVE a5
+ROTATED (0,0,0) RELATIVE a5
 EXTEND %{
-if (SCATTERED==0) UNIONFLAG =1;
-else UNIONFLAG=0;
+if (SCATTERED==0)
+{tpropt=1E-6;
+x=x-tpropt*vx;
+y=y-tpropt*vy;
+z=z-tpropt*vz;
+t=t-tpropt;
+UNIONFLAG =1;}
+else{UNIONFLAG=0;}
 %}
+
+COMPONENT init = Union_init()
+AT (0,0,0) ABSOLUTE
 
 COMPONENT Vanadium_incoherent = Incoherent_process(
     sigma=0.1,
@@ -384,6 +393,9 @@ ROTATED (0, -A5,0) RELATIVE a5
 COMPONENT Master = Union_master()
 WHEN(UNIONFLAG==1)
 AT(0,0,0) RELATIVE a5
+
+COMPONENT stop = Union_stop()
+AT (0,0,0) ABSOLUTE
 
 COMPONENT a6 = Arm()
 AT (0, 0, 0) RELATIVE a5
