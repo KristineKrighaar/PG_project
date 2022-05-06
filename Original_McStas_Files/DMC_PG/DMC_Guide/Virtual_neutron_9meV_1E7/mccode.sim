@@ -1,0 +1,132 @@
+McStas simulation description file for template_body_simple.
+Date:    Fri May  6 11:27:46 2022
+Program: McStas 3.1 - Nov. 24, 2021
+
+begin instrument: template_body_simple
+  File: Virtual_neutron_9meV_1E7/mccode
+  Source: DMC_guide.instr
+  Parameters:  div(double) Ei(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: Virtual_neutron_9meV_1E7
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 3.1 - Nov. 24, 2021
+  Instrument: DMC_guide.instr
+  Ncount: 10000000
+  Trace: no
+  Gravitation: no
+  Seed: 1651829266917997
+  Directory: Virtual_neutron_9meV_1E7
+  Param: div=20
+  Param: Ei=9
+end simulation
+
+begin data
+  Date: Fri May  6 11:27:51 2022 (1651829271)
+  type: array_2d(120, 120)
+  Source: template_body_simple (DMC_guide.instr)
+  component: psd_monitor
+  position: 0 0 41.201
+  title: PSD monitor
+  Ncount: 20000000
+  filename: psd_guide.dat
+  statistics: X0=0.000465941; dX=0.576486; Y0=-0.00931189; dY=3.46085;
+  signal: Min=0; Max=139762; Mean=12408.9;
+  values: 1.78689e+08 256859 1.75902e+06
+  xvar: X 
+  yvar: Y 
+  xlabel: X position [cm]
+  ylabel: Y position [cm]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -7.5 7.5 -7.5 7.5
+  variables: I I_err N
+end data
+
+begin data
+  Date: Fri May  6 11:27:51 2022 (1651829271)
+  type: array_2d(120, 120)
+  Source: template_body_simple (DMC_guide.instr)
+  component: divergence_monitor
+  position: 0 0 41.202
+  title: Divergence monitor
+  Ncount: 20000000
+  filename: divergence_guide.dat
+  statistics: X0=0.00017817; dX=0.242028; Y0=0.000181447; dY=0.31121;
+  signal: Min=0; Max=105740; Mean=12408.9;
+  values: 1.78689e+08 256859 1.75902e+06
+  xvar: X 
+  yvar: Y 
+  xlabel: X divergence [deg]
+  ylabel: Y divergence [deg]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -1.2 1.2 -1.2 1.2
+  variables: I I_err N
+end data
+
+begin data
+  Date: Fri May  6 11:27:51 2022 (1651829271)
+  type: array_1d(20)
+  Source: template_body_simple (DMC_guide.instr)
+  component: e_monitor
+  position: 0 0 41.203
+  title: Energy monitor
+  Ncount: 20000000
+  filename: E_guide.dat
+  statistics: X0=8.75; dX=0;
+  signal: Min=0; Max=1.78689e+08; Mean=8.93443e+06;
+  values: 1.78689e+08 256859 1.75902e+06
+  xvar: E
+  yvar: (I,I_err)
+  xlabel: Energy [meV]
+  ylabel: Intensity
+  xlimits: 0 50
+  variables: E I I_err N
+end data
+
+begin data
+  Date: Fri May  6 11:27:51 2022 (1651829271)
+  type: array_2d(90, 90)
+  Source: template_body_simple (DMC_guide.instr)
+  component: psd_monitor_col
+  position: 1.84484 0 43.0702
+  title: PSD monitor
+  Ncount: 20000000
+  filename: psd_col.dat
+  statistics: X0=-0.000594739; dX=0.830578; Y0=-0.00342063; dY=3.0409;
+  signal: Min=0; Max=55276.7; Mean=1154.74;
+  values: 9.35336e+06 49055.9 114718
+  xvar: X 
+  yvar: Y 
+  xlabel: X position [cm]
+  ylabel: Y position [cm]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -15 15 -15 15
+  variables: I I_err N
+end data
+
+begin data
+  Date: Fri May  6 11:27:51 2022 (1651829271)
+  type: array_1d(50)
+  Source: template_body_simple (DMC_guide.instr)
+  component: e_monitor_final
+  position: 1.84492 0 43.0702
+  title: Energy monitor
+  Ncount: 20000000
+  filename: energy_mon.dat
+  statistics: X0=9.00111; dX=0.104103;
+  signal: Min=0; Max=4.66031e+06; Mean=187067;
+  values: 9.35336e+06 49055.9 114718
+  xvar: E
+  yvar: (I,I_err)
+  xlabel: Energy [meV]
+  ylabel: Intensity
+  xlimits: 0 10
+  variables: E I I_err N
+end data

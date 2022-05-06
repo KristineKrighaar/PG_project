@@ -330,20 +330,51 @@ struct Mat svd(struct Mat A, double epsilon=1e-10):
       double co = cos(pi/4);
       
       double Rot1[3][3] = {{co, -si, 0}, {si, co, 0}, {0, 0, 1}};
-      double Phi_1 = Rot1*Phi_nn1x*Rot1^(-1)
+      double inv1 = matinv(Rot1);
+      double mul1 = matmul(Phi_nn1x inv1);
+      double Phi_1 = matmul(Rot1 mul1);
+      
       double Rot2[3][3] = {{co, 0, -si}, {0, 1, 0}, {si, 0, co}};
-      double Phi_2 = Rot2*Phi_nn1x*Rot2^(-1);
+      double inv2 = matinv(Rot2);
+      double mul2 = matmul(Phi_nn1x inv2);
+      double Phi_2 = matmul(Rot2 mul2);
+      
       double Rot3[3][3] = {{1, 0, 0}, {0, co, -si}, {0, si, co}};
-      double Phi_3 = Rot3*Phi_nn1y*Rot3^(-1);
+      double inv3 = matinv(Rot3);
+      double mul3 = matmul(Phi_nn1y inv3);
+      double Phi_3 = matmul(Rot3 mul3);
+      
+
       double Rot4[3][3] = {{co, si, 0} {-si, co, 0}, {0, 0, 1}};
-      double Phi_4 = Rot4*Phi_nn1x*Rot4^(-1);
+      double inv4 = matinv(Rot4);
+      double mul4 = matmul(Phi_nn1x inv4);
+      double Phi_4 = matmul(Rot4 mul4);
+      
       double Rot5[3][3] = {{co, 0, si}, {0, 1, 0}, {-si, 0, co};
-      double Phi_5 = Rot5*Phi_nn1x*Rot5^(-1);
+      double inv5 = matinv(Rot5);
+      double mul5 = matmul(Phi_nn1x inv5);
+      double Phi_5 = matmul(Rot5 mul5);
+      
       double Rot6[3][3] = {{1, 0, 0}, {0, co, si}, {0, -si, co}};
-      double Phi_6 = Rot6*Phi_nn1y*Rot6^(-1);
+      double inv6 = matinv(Rot6);
+      double mul6 = matmul(Phi_nn1y inv6);
+      double Phi_6 = matmul(Rot6 mul6);
       
       // 2nd Neighbour
       
+      double Phi_nn2x[3][3]={{K_l2, 0, 0}, {0, K_t2, 0}, {0, 0, K_t2}};
+		double Phi_nn2y[3][3]={{K_t2, 0, 0}, {0, K_l2, 0}, {0, 0, K_t2}};
+		double Phi_nn2z[3][3]={{K_t2, 0, 0}, {0, K_t2, 0}, {0, 0, K_l}};
+
+		double Phi_7 = Phi_nn2x;
+		double Phi_8 = Phi_nn2y;
+		double Phi_9 = Phi_nn2z;
+				
+      // 3rd Neighbour
+      
+      
+      
+      // 4th Neighbour
       
       
       

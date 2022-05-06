@@ -1,0 +1,222 @@
+/*******************************************************************************
+* Instrument: <instrument name>
+*
+* %I
+* Written by: <your name (email)>
+* Date: <current date>
+* Origin: <your institution>
+* %INSTRUMENT_SITE: Templates
+*
+* <instrument short description>
+*
+* %D
+* <instrument description>
+*
+* Example: <parameters=values>
+*
+* %P
+* <parameter1>: [<unit>] <parameter1 description>
+* ...
+*
+* %L
+* <reference/HTML link>
+*
+* %E
+*******************************************************************************/
+DEFINE INSTRUMENT template_body_simple(z=0, theta_s=90, Csample=26, T=290, repeat_count=1)
+
+DECLARE
+%{
+double delta_d_d= 1E-4;
+double mosaic = 20;
+%}
+
+USERVARS %{
+  double tpropt;
+  int UNIONFLAG;
+  int phonon_flag;
+%}
+
+INITIALIZE
+%{
+//delta_d_d = 1E-4;
+//mosaic = 20;
+%}
+
+TRACE
+
+COMPONENT origin = Progress_bar()
+AT (0, 0, 0) RELATIVE ABSOLUTE
+
+// insert components here (e.g. Insert -> Source -> ...)
+
+  
+COMPONENT mcpl_input = MCPL_input(
+    filename="Virtual_neutron_9meV_1E7.mcpl.gz",
+    Emax=20, 
+    repeat_count=repeat_count)
+AT (0, 0, 0) RELATIVE origin
+
+COMPONENT psd_monitor = PSD_monitor(
+    filename="pre", 
+    xwidth=0.1, 
+    yheight=0.2, 
+    restore_neutron=1)
+AT (0, 0, 0.001) RELATIVE PREVIOUS
+
+
+COMPONENT e_monitor = E_monitor(
+    nE=200, 
+    filename="energy", 
+    Emin=0, 
+    Emax=20, 
+    restore_neutron=1)
+AT (0, 0, 0.0001) RELATIVE PREVIOUS
+
+ COMPONENT sample_position = Arm()
+AT (0 ,0 ,0.1) RELATIVE mcpl_input
+
+
+COMPONENT sample_rotation = Arm()
+AT (0 ,0 ,0) RELATIVE sample_position
+ROTATED (0,theta_s,0) RELATIVE sample_position
+
+
+COMPONENT phonon_simple = Phonon_simple( // This component should be changed to be our phonon components
+    radius=0.025, 
+    yheight=0.01, 
+    sigma_abs=0, 
+    sigma_inc=0, 
+    a=6.71, 
+    b=6.64, 
+    M=12.01, 
+    c=10, 
+    DW=1, 
+    T=290)
+AT (0, 0, 0) RELATIVE sample_rotation
+
+
+/*COMPONENT mirror_comp = Mirror_Kristine(
+    reflect="reflection_0.001.txt", 
+    xwidth=0.05, 
+    yheight=0.01, 
+    center=1,
+    f_reflection = 0.000047079)
+AT (0, 0, -(0.001/2+0.0001)) RELATIVE sample_rotation
+ROTATED (0,0,0) RELATIVE sample_rotation
+EXTEND %{
+if (SCATTERED==0)
+{tpropt=1E-6;
+x=x-tpropt*vx;
+y=y-tpropt*vy;
+z=z-tpropt*vz;
+t=t-tpropt;
+UNIONFLAG =1;}
+else{UNIONFLAG=0;}
+%}
+
+
+COMPONENT init = Union_init()
+AT (0,0,0) ABSOLUTE
+
+COMPONENT incoherent_process = Incoherent_process(
+    sigma=0.1, 
+    packing_factor=0.06907, 
+    unit_cell_volume=35.29)
+AT (0, 0, 0) RELATIVE ABSOLUTE
+
+
+COMPONENT PG_powder = Powder_process(
+    reflections="C_graphite.laz",
+    packing_factor= 0.00158,
+    Vc=35.29, 
+    delta_d_d=delta_d_d, 
+    DW=1, 
+    nb_atoms=4)
+AT (0, 0, 0) RELATIVE ABSOLUTE
+
+
+
+COMPONENT PG_single_crystal = Single_crystal_process( 
+    delta_d_d=delta_d_d,
+    mosaic = mosaic,
+    recip_cell = 0, 
+    ax= 2.13389, 
+    ay= 1.232, 
+    az= 0,
+    bx = -2.13389, 
+    by = 1.232, 
+    bz = 0,
+    cx = 0, 
+    cy = 0, 
+    cz = 6.711, 
+    reflections="C_graphite.lau", 
+    barns=0, 
+    packing_factor=1)
+AT (0, 0, 0) RELATIVE ABSOLUTE
+ROTATED (0 ,0 ,0) RELATIVE ABSOLUTE
+
+
+COMPONENT phononsimple_process = PhononSimple_process(
+    packing_factor = 100, 
+    a=6.71, 
+    b=6.64, 
+    M=12.01, 
+    c=Csample, 
+    DW=1, 
+    T=T)
+AT (0, 0, 0) RELATIVE ABSOLUTE
+
+COMPONENT sample_material = Union_make_material(process_string="incoherent_process,PG_single_crystal,PG_powder,phononsimple_process" , 
+    my_absorption =100*1.2/33)
+AT (0 ,0, 0) RELATIVE sample_rotation
+
+COMPONENT sample_volume = Union_box( 
+   xwidth = 0.05,
+   yheight=0.01, 
+   zdepth=0.001,
+   priority=1,
+   material_string="sample_material")
+AT (0 ,0 ,0) RELATIVE sample_rotation
+ROTATED (0, 0 ,0) RELATIVE sample_rotation
+
+COMPONENT Master = Union_master(
+   allow_inside_start=1)
+WHEN(UNIONFLAG==1)
+AT(0,0,0) RELATIVE sample_rotation
+EXTEND %{
+   if (scattered_flag_VP[1][3] > 0) phonon_flag = 1;
+     else phonon_flag = 0;
+%}
+
+COMPONENT stop = Union_stop()
+AT (0,0,0) ABSOLUTE*/
+
+
+
+
+COMPONENT monitor_nd = Monitor_nD(
+    xwidth=2, 
+    yheight=0.1, 
+    options="banana, theta limits=[-178.89 -13.09], bins=830",
+    filename="My_data",
+    restore_neutron=1)
+AT (0, 0, 0) RELATIVE sample_position
+ROTATED (0, 0, 0) RELATIVE sample_position
+
+/*COMPONENT monitor_nd_phonon_only = Monitor_nD(
+    xwidth=2,
+    yheight=0.1,
+    options="banana, theta bins=830 limits=[-178.89 -13.09]", 
+    filename="My_data_phonon_only")
+WHEN (phonon_flag == 1)
+AT (0, 0, 0) RELATIVE sample_position
+ROTATED (0, 0, 0) RELATIVE sample_position*/
+/* The resolution of the  of the detectors s set so one detector cores an angle of 0.1998 degrees*/
+
+
+FINALLY
+%{
+%}
+
+END

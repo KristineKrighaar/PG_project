@@ -1,0 +1,91 @@
+McStas simulation description file for template_body_simple.
+Date:    Fri May  6 11:23:58 2022
+Program: McStas 3.1 - Nov. 24, 2021
+
+begin instrument: template_body_simple
+  File: /home/kristine/Documents/GitHub/PG_project/Original_McStas_Files/DMC_PG/Main_spectrometer/DMC_PG_map_v1_Cu_test_20220506_112358/mccode
+  Source: DMC_PG_map_v1_Cu_test.instr
+  Parameters:  z(double) theta_s(double) Csample(double) T(double) repeat_count(double)
+  Trace_enabled: yes
+  Default_main: yes
+  Embedded_runtime: yes
+end instrument
+
+begin simulation: /home/kristine/Documents/GitHub/PG_project/Original_McStas_Files/DMC_PG/Main_spectrometer/DMC_PG_map_v1_Cu_test_20220506_112358
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 3.1 - Nov. 24, 2021
+  Instrument: DMC_PG_map_v1_Cu_test.instr
+  Ncount: 1000
+  Trace: no
+  Gravitation: no
+  Seed: 1651829038103283
+  Directory: /home/kristine/Documents/GitHub/PG_project/Original_McStas_Files/DMC_PG/Main_spectrometer/DMC_PG_map_v1_Cu_test_20220506_112358
+  Param: z=0
+  Param: theta_s=90
+  Param: Csample=26
+  Param: T=290
+  Param: repeat_count=1
+end simulation
+
+begin data
+  Date: Fri May  6 11:24:28 2022 (1651829068)
+  type: array_2d(90, 90)
+  Source: template_body_simple (DMC_PG_map_v1_Cu_test.instr)
+  component: psd_monitor
+  position: 0 0 0.001
+  title: PSD monitor
+  Ncount: 23002926
+  filename: pre.dat
+  statistics: X0=0.00124042; dX=0.831206; Y0=0.00318913; dY=3.03977;
+  signal: Min=0; Max=10973.5; Mean=1155.2;
+  values: 9.35716e+06 4909.74 1.15015e+07
+  xvar: X 
+  yvar: Y 
+  xlabel: X position [cm]
+  ylabel: Y position [cm]
+  zvar: I
+  zlabel: Signal per bin
+  xylimits: -5 5 -10 10
+  variables: I I_err N
+end data
+
+begin data
+  Date: Fri May  6 11:24:28 2022 (1651829068)
+  type: array_1d(200)
+  Source: template_body_simple (DMC_PG_map_v1_Cu_test.instr)
+  component: e_monitor
+  position: 0 0 0.0011
+  title: Energy monitor
+  Ncount: 23002926
+  filename: energy.dat
+  statistics: X0=9.00031; dX=0.0913666;
+  signal: Min=0; Max=3.14326e+06; Mean=42958.2;
+  values: 8.59164e+06 4715.23 9.86394e+06
+  xvar: E
+  yvar: (I,I_err)
+  xlabel: Energy [meV]
+  ylabel: Intensity
+  xlimits: 0 20
+  variables: E I I_err N
+end data
+
+begin data
+  Date: Fri May  6 11:24:28 2022 (1651829068)
+  type: array_1d(830)
+  Source: template_body_simple (DMC_PG_map_v1_Cu_test.instr)
+  component: monitor_nd
+  position: 0 0 0.1
+  title: Longitude [deg] monitor
+  Ncount: 23002926
+  filename: My_data.th
+  statistics: X0=-117.961; dX=36.7679;
+  signal: Min=41.6384; Max=16309.5; Mean=2209.71;
+  values: 1.83406e+06 31946.4 47780
+  xvar: th
+  yvar: (I,I_err)
+  xlabel: Longitude [deg]
+  ylabel: Intensity [n/s/bin]
+  xlimits: -178.89 -13.09
+  variables: th I I_err N
+end data
